@@ -103,6 +103,16 @@ class Vr360TableTour extends Vr360Table
 			$this->status = VR360_TOUR_STATUS_PUBLISHED_READY;
 		}
 
+		if ($this->hits === null)
+		{
+			$this->hits = 0;
+		}
+
+		if ($this->ordering === null)
+		{
+			$this->ordering = 0;
+		}
+
 		return parent::check();
 	}
 }

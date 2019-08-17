@@ -25,27 +25,6 @@ class Vr360Table extends Vr360Object
 	protected $_table = null;
 
 	/**
-	 * Basic checking
-	 *
-	 * @return boolean
-	 */
-	protected function check()
-	{
-		if ($this->_table === null)
-		{
-			return false;
-		}
-
-		// Convert params to json before saving
-		if (is_object($this->params) || is_array($this->params))
-		{
-			$this->params = json_encode($this->params);
-		}
-
-		return true;
-	}
-
-	/**
 	 * @param   array $condition Condition
 	 *
 	 * @return  boolean
@@ -88,6 +67,18 @@ class Vr360Table extends Vr360Object
 	}
 
 	/**
+	 * @param $src
+	 *
+	 * @return boolean
+	 */
+	public function save($src)
+	{
+		$this->bind($src);
+
+		return $this->store();
+	}
+
+	/**
 	 * @return boolean
 	 */
 	public function store()
@@ -109,15 +100,24 @@ class Vr360Table extends Vr360Object
 	}
 
 	/**
-	 * @param $src
+	 * Basic checking
 	 *
 	 * @return boolean
 	 */
-	public function save($src)
+	protected function check()
 	{
-		$this->bind($src);
+		if ($this->_table === null)
+		{
+			return false;
+		}
 
-		return $this->store();
+		// Convert params to json before saving
+		if (is_object($this->params) || is_array($this->params))
+		{
+			$this->params = json_encode($this->params);
+		}
+
+		return true;
 	}
 
 	/**

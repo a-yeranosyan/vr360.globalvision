@@ -30,7 +30,7 @@ class Vr360Session extends Vr360Object
 	/**
 	 * Vr360Session constructor.
 	 *
-	 * @param   array  $properties  Properties
+	 * @param   array $properties Properties
 	 */
 	public function __construct($properties = null)
 	{
@@ -73,6 +73,10 @@ class Vr360Session extends Vr360Object
 		return $instance;
 	}
 
+	/**
+	 * @param        $message
+	 * @param string $type
+	 */
 	public function addMessage($message, $type = 'default')
 	{
 		$messages          = $this->get('messages', array());

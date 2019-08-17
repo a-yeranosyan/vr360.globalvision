@@ -25,8 +25,8 @@ class Vr360HelperAuthorize
 	}
 
 	/**
-	 * @param   string  $userName
-	 * @param   string  $password
+	 * @param   string $userName
+	 * @param   string $password
 	 *
 	 * @return  boolean
 	 */

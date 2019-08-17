@@ -25,34 +25,6 @@ class Vr360Migrate
 		}
 	}
 
-	protected function migrateTour($tour)
-	{
-		// Upgrade krpano files
-		$this->updateKrpano($tour);
-
-		// Upgrade XML content
-		$this->updateXml($tour);
-
-		// ! Upgrade json data & params
-		$this->updateJson($tour);
-	}
-
-	/**
-	 * @param $tour
-	 */
-	protected function cleanup($tour)
-	{
-		$tourDir = VR360_PATH_DATA . '/' . $tour['dir'];
-		Vr360HelperFile::delete($tourDir . '/kr-tool.sh');
-		Vr360HelperFile::delete($tourDir . '/kr.log.err.html');
-		Vr360HelperFile::delete($tourDir . '/kr.log.html');
-		Vr360HelperFile::delete($tourDir . '/php.mail.log.html');
-		Vr360HelperFile::delete($tourDir . '/tour_testingserver.exe');
-		Vr360HelperFile::delete($tourDir . '/tour_testingserver_macos');
-
-		$this->deleteTours($tour);
-	}
-
 	/**
 	 * @return array|bool
 	 */
@@ -79,73 +51,16 @@ class Vr360Migrate
 		);
 	}
 
-	/**
-	 * @param $tour
-	 * @param $pano
-	 *
-	 * @return array|bool
-	 */
-	protected function getPano($tour, $pano)
+	protected function migrateTour($tour)
 	{
-		$db = Vr360Database::getInstance();
+		// Upgrade krpano files
+		$this->updateKrpano($tour);
 
-		return $db->select(
-			'panos',
-			'*',
-			[
-				'tourId' => $tour['id'],
-				'title'  => $pano['title'],
-				'file'   => $pano['file']
-			]
-		);
-	}
+		// Upgrade XML content
+		$this->updateXml($tour);
 
-	/**
-	 * @param $tour
-	 */
-	protected function deleteTours($tour)
-	{
-		$db = Vr360Database::getInstance();
-
-		$dataDir = VR360_PATH_DATA . '/' . $tour['dir'];
-
-		if (!Vr360HelperFolder::exists($dataDir))
-		{
-			// Delete this tour
-			$db->delete("tours",
-				[
-					"AND" => ["id" => (int) $tour['id']]
-				]);
-
-			return ;
-		}
-
-		// Move unpublished & pending
-		if ($tour['status'] != 1)
-		{
-			//
-			Vr360HelperFolder::create(VR360_PATH_ROOT . '/backup/tours');
-			Vr360HelperFolder::move($dataDir, VR360_PATH_ROOT . '/backup/tours/' . $tour['dir']);
-
-			// Delete this tour
-			$db->delete("tours",
-				[
-				"AND" => ["id" => (int) $tour['id']]
-			]);
-
-			var_dump($db->error());
-		}
-
-		// Delete old tour created by Nhan
-		if ($tour['created_by'] == 1)
-		{
-
-			$db->delete("tours", [
-				"AND" => [
-					"id" => (int) $tour['id']
-				]
-			]);
-		}
+		// ! Upgrade json data & params
+		$this->updateJson($tour);
 	}
 
 	/**
@@ -331,6 +246,91 @@ class Vr360Migrate
 		}
 	}
 
+	/**
+	 * @param $tour
+	 * @param $pano
+	 *
+	 * @return array|bool
+	 */
+	protected function getPano($tour, $pano)
+	{
+		$db = Vr360Database::getInstance();
+
+		return $db->select(
+			'panos',
+			'*',
+			[
+				'tourId' => $tour['id'],
+				'title'  => $pano['title'],
+				'file'   => $pano['file']
+			]
+		);
+	}
+
+	/**
+	 * @param $tour
+	 */
+	protected function cleanup($tour)
+	{
+		$tourDir = VR360_PATH_DATA . '/' . $tour['dir'];
+		Vr360HelperFile::delete($tourDir . '/kr-tool.sh');
+		Vr360HelperFile::delete($tourDir . '/kr.log.err.html');
+		Vr360HelperFile::delete($tourDir . '/kr.log.html');
+		Vr360HelperFile::delete($tourDir . '/php.mail.log.html');
+		Vr360HelperFile::delete($tourDir . '/tour_testingserver.exe');
+		Vr360HelperFile::delete($tourDir . '/tour_testingserver_macos');
+
+		$this->deleteTours($tour);
+	}
+
+	/**
+	 * @param $tour
+	 */
+	protected function deleteTours($tour)
+	{
+		$db = Vr360Database::getInstance();
+
+		$dataDir = VR360_PATH_DATA . '/' . $tour['dir'];
+
+		if (!Vr360HelperFolder::exists($dataDir))
+		{
+			// Delete this tour
+			$db->delete("tours",
+				[
+					"AND" => ["id" => (int) $tour['id']]
+				]);
+
+			return;
+		}
+
+		// Move unpublished & pending
+		if ($tour['status'] != 1)
+		{
+			//
+			Vr360HelperFolder::create(VR360_PATH_ROOT . '/backup/tours');
+			Vr360HelperFolder::move($dataDir, VR360_PATH_ROOT . '/backup/tours/' . $tour['dir']);
+
+			// Delete this tour
+			$db->delete("tours",
+				[
+					"AND" => ["id" => (int) $tour['id']]
+				]);
+
+			var_dump($db->error());
+		}
+
+		// Delete old tour created by Nhan
+		if ($tour['created_by'] == 1)
+		{
+
+			$db->delete("tours", [
+				"AND" => [
+					"id" => (int) $tour['id']
+				]
+			]);
+		}
+	}
+
 	protected function syncTours()
 	{
 		$prevDb = new \Medoo\Medoo(array
@@ -343,7 +343,7 @@ class Vr360Migrate
 			'charset'       => 'utf8'
 		));
 
-		$liveDb =new \Medoo\Medoo(array
+		$liveDb = new \Medoo\Medoo(array
 		(
 			'database_type' => 'mysql',
 			'server'        => 'localhost',
@@ -354,18 +354,18 @@ class Vr360Migrate
 		));
 
 		$prevTours = $prevDb->select(
-		'tours',
-		[
-			'tours.id',
-			'tours.name',
-			'tours.description',
-			'tours.alias',
-			'tours.created',
-			'tours.created_by',
-			'tours.dir',
-			'tours.status',
-			'tours.params'
-		]);
+			'tours',
+			[
+				'tours.id',
+				'tours.name',
+				'tours.description',
+				'tours.alias',
+				'tours.created',
+				'tours.created_by',
+				'tours.dir',
+				'tours.status',
+				'tours.params'
+			]);
 
 
 		foreach ($prevTours as $prevTour)
@@ -385,9 +385,9 @@ class Vr360Migrate
 					'tours.params'
 				],
 				[
-					'id' => $prevTour['id'],
-					'name' => $prevTour['name'],
-					'alias' => $prevTour['alias'],
+					'id'         => $prevTour['id'],
+					'name'       => $prevTour['name'],
+					'alias'      => $prevTour['alias'],
 					'created_by' => $prevTour['created_by']
 				]
 			);

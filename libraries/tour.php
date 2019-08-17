@@ -23,23 +23,6 @@ class Vr360Tour extends Vr360TableTour
 	}
 
 	/**
-	 * Method for get all scenes of tour
-	 *
-	 * @return   array|false  Array of scenes. False otherwise.
-	 *
-	 * @since  3.0.0
-	 */
-	public function getScenes()
-	{
-		if (!$this->id)
-		{
-			return false;
-		}
-
-		return Vr360ModelTour::getInstance()->getScenes($this->get('id'));
-	}
-
-	/**
 	 * @return integer
 	 */
 	public function getHotspots()
@@ -66,6 +49,23 @@ class Vr360Tour extends Vr360TableTour
 		}
 
 		return $count;
+	}
+
+	/**
+	 * Method for get all scenes of tour
+	 *
+	 * @return   array|false  Array of scenes. False otherwise.
+	 *
+	 * @since  3.0.0
+	 */
+	public function getScenes()
+	{
+		if (!$this->id)
+		{
+			return false;
+		}
+
+		return Vr360ModelTour::getInstance()->getScenes($this->get('id'));
 	}
 
 	/**
@@ -104,6 +104,31 @@ class Vr360Tour extends Vr360TableTour
 	}
 
 	/**
+	 * @param $file
+	 *
+	 * @return boolean|string
+	 */
+	public function getFile($file)
+	{
+		$filePath = Vr360HelperFile::clean($this->getDir() . '/' . $file);
+
+		if (!Vr360HelperFile::exists($filePath))
+		{
+			return false;
+		}
+
+		return $filePath;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getDir()
+	{
+		return VR360_PATH_DATA . '/' . $this->id;
+	}
+
+	/**
 	 * @return string
 	 */
 	public function getName()
@@ -112,7 +137,7 @@ class Vr360Tour extends Vr360TableTour
 	}
 
 	/**
-	 * @param   integer  $truncateLength  Truncate length
+	 * @param   integer $truncateLength Truncate length
 	 *
 	 * @return  string
 	 */
@@ -159,44 +184,11 @@ class Vr360Tour extends Vr360TableTour
 	}
 
 	/**
-	 * @param $file
-	 *
-	 * @return boolean|string
-	 */
-	public function getFile($file)
-	{
-		$filePath = Vr360HelperFile::clean($this->getDir() . '/' . $file);
-
-		if (!Vr360HelperFile::exists($filePath))
-		{
-			return false;
-		}
-
-		return $filePath;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getDir()
-	{
-		return VR360_PATH_DATA . '/' . $this->id;
-	}
-
-	/**
 	 * @return string
 	 */
 	public function getKrpanoJsUrl()
 	{
 		return './_/' . $this->id . '/vtour/tour.js';
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getKrpanoSwfUrl()
-	{
-		return './_/' . $this->id . '/vtour/tour.swf';
 	}
 
 	/**
@@ -216,25 +208,11 @@ class Vr360Tour extends Vr360TableTour
 	}
 
 	/**
-	 * @return boolean
+	 * @return string
 	 */
-	public function isValid()
+	public function getKrpanoSwfUrl()
 	{
-		$dataDir = Vr360HelperFile::clean($this->getDir());
-
-		if (!Vr360HelperFolder::exists($dataDir))
-		{
-			return false;
-		}
-
-		$tourDir = Vr360HelperFile::clean($dataDir . '/vtour');
-
-		if (!Vr360HelperFolder::exists($tourDir))
-		{
-			return false;
-		}
-
-		return true;
+		return './_/' . $this->id . '/vtour/tour.swf';
 	}
 
 	/**
@@ -271,6 +249,28 @@ class Vr360Tour extends Vr360TableTour
 	public function canEmbed()
 	{
 		return $this->isValid();
+	}
+
+	/**
+	 * @return boolean
+	 */
+	public function isValid()
+	{
+		$dataDir = Vr360HelperFile::clean($this->getDir());
+
+		if (!Vr360HelperFolder::exists($dataDir))
+		{
+			return false;
+		}
+
+		$tourDir = Vr360HelperFile::clean($dataDir . '/vtour');
+
+		if (!Vr360HelperFolder::exists($tourDir))
+		{
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
@@ -344,7 +344,7 @@ class Vr360Tour extends Vr360TableTour
 			return false;
 		}
 
-		$db = Vr360Factory::getDbo();
+		$db    = Vr360Factory::getDbo();
 		$query = $db->getQuery(true)
 			->update($this->_table)
 			->set($db->quoteName('hits') . ' = (' . $db->quoteName('hits') . ' + 1)')
@@ -355,5 +355,13 @@ class Vr360Tour extends Vr360TableTour
 		$this->hits++;
 
 		return true;
+	}
+
+	public function getUser()
+	{
+		$user = new Vr360User;
+		$user->load(array('id' => $this->get('created_by')));
+
+		return $user;
 	}
 }

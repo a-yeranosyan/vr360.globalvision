@@ -165,6 +165,11 @@ class Vr360AjaxResponse extends Vr360Object
 		return $this;
 	}
 
+	public function isSuccess()
+	{
+		return $this->status;
+	}
+
 	/**
 	 * @return  void
 	 */

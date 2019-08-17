@@ -10,6 +10,16 @@ defined('_VR360_EXEC') or die;
 class Vr360HelperCache
 {
 	/**
+	 * @param $key
+	 *
+	 * @return \Stash\Interfaces\ItemInterface
+	 */
+	public static function getItem($key)
+	{
+		return self::getCache()->getItem($key);
+	}
+
+	/**
 	 * @return \Stash\Pool
 	 */
 	public static function getCache()
@@ -26,16 +36,6 @@ class Vr360HelperCache
 		}
 
 		return $pool;
-	}
-
-	/**
-	 * @param $key
-	 *
-	 * @return \Stash\Interfaces\ItemInterface
-	 */
-	public static function getItem($key)
-	{
-		return self::getCache()->getItem($key);
 	}
 
 	/**

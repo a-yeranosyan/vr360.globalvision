@@ -8,7 +8,7 @@ defined('_VR360_EXEC') or die;
 class Vr360HelperTour
 {
 	/**
-	 * @param   string  $filePath
+	 * @param   string $filePath
 	 *
 	 * @return  boolean|string
 	 */

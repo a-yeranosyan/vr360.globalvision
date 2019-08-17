@@ -19,9 +19,9 @@
                    thumbs_scrollbuttons="false"
                    thumbs_scrollindicator="false"
                    thumbs_loop="false"
-                   tooltips_buttons="false"
+                   tooltips_buttons="true"
                    tooltips_thumbs="false"
-                   tooltips_hotspots="false"
+                   tooltips_hotspots="true"
                    tooltips_mapspots="false"
                    deeplinking="false"
                    loadscene_flags="MERGE"
@@ -199,13 +199,6 @@
     <style name="skin_thumbtext_style" type="text" align="bottom" width="100%" y="5" enabled="false" background="false"
            border="false" css="calc:skin_settings.design_text_css + ' text-align:center; font-size:10px;'"
            textshadow="get:skin_settings.design_text_shadow"/>
-    <style name="skin_hotspotstyle" url="vtourskin_hotspot.png" scale="0.5" edge="top" distorted="true"
-           tooltip=""
-           onclick="if(linkedscene, set(enabled,false); skin_hidetooltips(); tween(depth|alpha|oy|rx, 4000|0.0|-50|-60, 0.5, default, loadscene(get(linkedscene),null,get(skin_settings.loadscene_flags),get(skin_settings.loadscene_blend)); skin_updatescroll(); ); ); check_hotspot_type();"
-           onover="tween(scale,0.55);"
-           onout="tween(scale,0.5);"
-           onloaded="if(linkedscene AND skin_settings.tooltips_hotspots, copy(tooltip,scene[get(linkedscene)].title); loadstyle(skin_tooltips); );"
-    />
     <style name="skin_tooltips"
            onover.mouse="copy(layer[skin_tooltip].html, tooltip);
 	                     set(layer[skin_tooltip].visible, true);
@@ -213,57 +206,6 @@
 	                     asyncloop(hovering, copy(layer[skin_tooltip].x,mouse.stagex); copy(layer[skin_tooltip].y,mouse.stagey); );"
            onout.mouse="tween(layer[skin_tooltip].alpha, 0.0, 0.1, default, set(layer[skin_tooltip].visible,false), copy(layer[skin_tooltip].x,mouse.stagex); copy(layer[skin_tooltip].y,mouse.stagey); );"
     />
-    <style name="tooltip" crop="0|0|64|64" frame="0" lastframe="19" framewidth="64" frameheight="64" distorted="true"
-           onloaded="hotspot_animate()"
-           onover.mouse="copy(layer[tooltip_title_scene].html, scene[get(linkedscene)].title);
-	       				 copy(layer[tooltip_image_scene].url, scene[get(linkedscene)].thumburl);
-	                     set(layer[tooltip_parent].visible, true);
-	                     tween(layer[tooltip_title_scene].alpha, 1.0, 0.1);
-	                     asyncloop(hovering, copy(layer[tooltip_parent].x,mouse.stagex); copy(layer[tooltip_parent].y,mouse.stagey); );"
-           onout.mouse="tween(layer[tooltip_title_scene].alpha, 0.0, 0.1, default, set(layer[tooltip_parent].visible,false), copy(layer[tooltip_parent].x,mouse.stagex); copy(layer[tooltip_parent].y,mouse.stagey); );"
-    />
-    <action name="hotspot_animate">
-        inc(frame,1,get(lastframe),0);
-        mul(ypos,frame,frameheight);
-        txtadd(crop,'0|',get(ypos),'|',get(framewidth),'|',get(frameheight));
-        delayedcall(0.1, if(loaded, hotspot_animate() ) );
-    </action>
-    <style name="textpopup" url="images/information.png" scale="0.8" onover.mouse="" onout.mouse=""/>
-    <layer name="tooltip_parent" type="container" keep="true" align="lefttop" edge="bottom" x="0" y="0" oy="-5"
-           width="140" height="120" bgcolor="0x000000" bgalpha="0.7" bgroundedge="5" visible="false">
-        <layer name="tooltip_image_scene" type="image" url="" keep="false" align="lefttop" x="10" y="10" width="240"
-               heigt="160" crop="0|40|240|160" scale="0.5"/>
-        <layer name="tooltip_title_scene" keep="false"
-               url="%SWFPATH%/plugins/textfield.swf"
-               visible="true" alpha="0" enabled="false"
-               align="lefttop" x="10" y="90" width="120" autoheight="true"
-               background="false" backgroundcolor="0xFFFFFF" backgroundalpha="1.0"
-               border="false" bordercolor="0x000000" borderalpha="1.0" borderwidth="1.0" roundedge="0"
-               shadow="0.0" shadowrange="4.0" shadowangle="45" shadowcolor="0x000000" shadowalpha="1.0"
-               textshadow="get:skin_settings.design_text_shadow" textshadowrange="6.0" textshadowangle="90"
-               textshadowcolor="0x000000" textshadowalpha="1.0"
-               css="color:#ffffff; font-family:Arial; text-align:left; font-size:12px;"
-               html=""
-        />
-    </layer>
-    <action name="check_hotspot_type">
-        set(text, get(hotspot_text));
-
-        if(webvr.isenabled,
-        set(layer[overlay].visible, false);
-        ,
-        if(text != '',
-
-        set(layer[overlay].visible, true);
-        set(layer[text_popup].html, get(hotspot_text));
-        );
-        if(text == null,
-        set(layer[overlay].visible, false);
-        );
-        );
-
-
-    </action>
     <action name="show_hotspot">
         set(layer[overlay].visible, false);
     </action>
@@ -427,7 +369,7 @@
             onavailable="skin_arrange_buttons();" devices="html5"/>
     <events name="skin_events" keep="true"
             onxmlcomplete="set(events[skin_events].onxmlcomplete,null); skin_startup(); check_br_type();"
-            onnewpano="skin_showloading(true); skin_update_scene_infos();get_title_scene(); skin_deeplinking_update_url(); check_type_browser(); js(superHotspot.loadHotspotsToCurrentSceneFromSavedData());"
+            onnewpano="skin_showloading(true); skin_update_scene_infos();get_title_scene(); skin_deeplinking_update_url(); "
             onremovepano="skin_showloading(true);"
             onloadcomplete="skin_showloading(false);"
             onidle="skin_deeplinking_update_url();"

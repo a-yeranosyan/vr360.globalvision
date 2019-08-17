@@ -28,34 +28,6 @@ class Vr360Object
 	}
 
 	/**
-	 * @return string
-	 */
-	public function __toString()
-	{
-		return get_class($this);
-	}
-
-	/**
-	 * @param   array  $properties  Properties
-	 *
-	 * @return  boolean
-	 */
-	public function bind($properties)
-	{
-		$classProperties = get_class_vars($this);
-
-		foreach ($properties as $key => $property)
-		{
-			if (array_key_exists($key, $classProperties))
-			{
-				$this->$key = $property;
-			}
-		}
-
-		return true;
-	}
-
-	/**
 	 * @param   array $properties Properties
 	 *
 	 * @return  boolean
@@ -91,6 +63,34 @@ class Vr360Object
 	}
 
 	/**
+	 * @return string
+	 */
+	public function __toString()
+	{
+		return get_class($this);
+	}
+
+	/**
+	 * @param   array $properties Properties
+	 *
+	 * @return  boolean
+	 */
+	public function bind($properties)
+	{
+		$classProperties = get_class_vars($this);
+
+		foreach ($properties as $key => $property)
+		{
+			if (array_key_exists($key, $classProperties))
+			{
+				$this->$key = $property;
+			}
+		}
+
+		return true;
+	}
+
+	/**
 	 * @param   string $property Property
 	 * @param   mixed  $default  Default value
 	 *
@@ -104,8 +104,8 @@ class Vr360Object
 	}
 
 	/**
-	 * @param   string  $property   Property
-	 * @param   null    $default    Default value
+	 * @param   string $property Property
+	 * @param   null   $default  Default value
 	 *
 	 * @return  null
 	 */
@@ -128,7 +128,7 @@ class Vr360Object
 	}
 
 	/**
-	 * @param   boolean  $public  Get public properties
+	 * @param   boolean $public Get public properties
 	 *
 	 * @return  array
 	 */
@@ -151,7 +151,7 @@ class Vr360Object
 	}
 
 	/**
-	 * @param   string  $error
+	 * @param   string $error
 	 */
 	public function setError($error)
 	{

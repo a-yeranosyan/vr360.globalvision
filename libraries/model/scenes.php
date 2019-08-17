@@ -29,7 +29,7 @@ class Vr360ModelScenes extends Vr360Model
 			$query->where($db->quoteName('tourId') . ' = ' . (int) $tourId);
 		}
 
-		$rows   = $db->setQuery($query)->loadObjectList();
+		$rows = $db->setQuery($query)->loadObjectList();
 
 		if (!$rows)
 		{
@@ -41,7 +41,7 @@ class Vr360ModelScenes extends Vr360Model
 		foreach ($rows as $row)
 		{
 			$row->params = !empty($row->params) ? new Vr360Object(json_decode($row->params)) : new Vr360Object;
-			$scene         = new Vr360Scene;
+			$scene       = new Vr360Scene;
 			$scene->bind($row);
 			$scenes[] = $scene;
 		}

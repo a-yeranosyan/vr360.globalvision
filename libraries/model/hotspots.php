@@ -10,30 +10,13 @@ defined('_VR360_EXEC') or die;
 class Vr360ModelHotspots extends Vr360Model
 {
 	/**
-	 * @return static
-	 */
-	public static function getInstance()
-	{
-		static $instance;
-
-		if (isset($instance))
-		{
-			return $instance;
-		}
-
-		$instance = new static;
-
-		return $instance;
-	}
-
-	/**
 	 * @param null $sceneId
 	 *
 	 * @return array|boolean
 	 */
 	public function getList($sceneId = null)
 	{
-		$db = Vr360Factory::getDbo();
+		$db    = Vr360Factory::getDbo();
 		$query = $db->getQuery(true)
 			->select('*')
 			->from($db->quoteName('hotspots'));
@@ -57,7 +40,7 @@ class Vr360ModelHotspots extends Vr360Model
 		foreach ($rows as $row)
 		{
 			$row->params = !empty($row->params) ? new Vr360Object(json_decode($row->params)) : new Vr360Object;
-			$hotspot         = new Vr360Hotspot;
+			$hotspot     = new Vr360Hotspot;
 			$hotspot->bind($row);
 			$hotspots[] = $hotspot;
 		}
@@ -66,13 +49,13 @@ class Vr360ModelHotspots extends Vr360Model
 	}
 
 	/**
-	 * @param   integer  $sceneId
+	 * @param   integer $sceneId
 	 *
 	 * @return  boolean
 	 */
 	public function deleteBySceneId($sceneId)
 	{
-		$db = Vr360Factory::getDbo();
+		$db    = Vr360Factory::getDbo();
 		$query = $db->getQuery(true)
 			->delete($db->quoteName('hotspots'))
 			->where($db->quoteName('sceneId') . ' = ' . (int) $sceneId);

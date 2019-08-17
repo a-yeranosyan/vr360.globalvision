@@ -33,79 +33,73 @@
 	<!-- Globalvision -->
 	<link rel="stylesheet" type="text/css" href="./assets/css/globalvision.min.css">
 	<?php if (Vr360HelperAuthorize::isAuthorized()): ?>
-		<script type="text/javascript" src="./assets/js/admin.min.js"></script>
+		<script type="text/javascript" src="./assets/js/admin.js"></script>
 		<script type="text/javascript" src="./assets/js/admin/modal.min.js"></script>
 		<script type="text/javascript" src="./assets/js/admin/waiting.min.js"></script>
 		<script type="text/javascript" src="./assets/js/log.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
 	<?php endif; ?>
 </head>
 <body>
 <div class="container-fluid">
 	<div class="row mainWrapper">
 		<!-- Waiting layer -->
-		<div id="overlay-waiting" class="waiting">
-			<div class="row">
-				<div class="messages col-md-6 col-md-offset-3">
+		<div class="row">
+			<div id="overlay-waiting" class="waiting">
+				<div class="col-md-6 col-md-offset-3 messages">
 				</div>
-			</div>
-			<div class="row">
 				<div class="col-md-2 col-md-offset-3">
-					<button
-							class="btn btn-primary btn-block btn-log-close ajax-close"
-							onclick=""><i class="fa fa-close"></i> Close
+					<button class="btn btn-primary btn-block btn-log-close ajax-close">
+						<i class="fa fa-close"></i> <?php echo \Joomla\Language\Text::_('GENERAL_LABEL_CLOSE'); ?>
 					</button>
 				</div>
 			</div>
 		</div>
-		<div class="col-md-12">
-			<div class="row">
-				<div class="col-md-6">
-					<div class="header">
-						<a href="http://globalvision.ch" target="_blank" class="logo">
-							<img id="logo" src="./assets/images/logo.png"/>
-						</a>
-					</div>
+		<div class="row">
+			<div class="col-md-6">
+				<div class="header">
+					<a href="http://globalvision.ch" target="_blank" class="logo">
+						<!--<img id="logo" src="./assets/images/logo.png"/>-->
+					</a>
 				</div>
-				<div class="col-md-6">
-					<div class="text-center center-block">
-						<a
-								class="social-facebook"
-								href="<?php echo Vr360Configuration::getConfig('socials')['facebook']; ?>"
-								target="_blank"
-						>
-							<i class="fab fa-facebook-square fa-3x"></i></i>
-						</a>
-						<a
-								class="social-twitter"
-								href="<?php echo Vr360Configuration::getConfig('socials')['twitter']; ?>"
-								target="_blank"
-						>
-							<i class="fab fa-twitter-square fa-3x"></i>
-						</a>
-						<a
-								class="social-googleplus"
-								href="<?php echo Vr360Configuration::getConfig('socials')['google+']; ?>"
-								target="_blank"
-						>
-							<i class="fab fa-google-plus-square fa-3x"></i></a>
-						<a
-								class="social-email"
-								href="<?php echo Vr360Configuration::getConfig('socials')['mail']; ?>"
-						>
-							<i class="fas fa-envelope-square fa-3x"></i>
-						</a>
-					</div>
+			</div>
+			<div class="col-md-6">
+				<div class="text-center center-block">
+					<a
+							class="social-facebook"
+							href="<?php echo Vr360Configuration::getConfig('socials')['facebook']; ?>"
+							target="_blank"
+					>
+						<i class="fab fa-facebook-square fa-3x"></i></i>
+					</a>
+					<a
+							class="social-twitter"
+							href="<?php echo Vr360Configuration::getConfig('socials')['twitter']; ?>"
+							target="_blank"
+					>
+						<i class="fab fa-twitter-square fa-3x"></i>
+					</a>
+					<a
+							class="social-googleplus"
+							href="<?php echo Vr360Configuration::getConfig('socials')['google+']; ?>"
+							target="_blank"
+					>
+						<i class="fab fa-google-plus-square fa-3x"></i></a>
+					<a
+							class="social-email"
+							href="<?php echo Vr360Configuration::getConfig('socials')['mail']; ?>"
+					>
+						<i class="fas fa-envelope-square fa-3x"></i>
+					</a>
 				</div>
 			</div>
 		</div>
 		<div class="col-md-12">
-			<div class="messages">
+			<div class="system-messages">
 				<?php $messages = Vr360Session::getInstance()->getMessages(); ?>
 				<?php if (!empty($messages)): ?>
 					<?php foreach ($messages as $key => $type): ?>
 						<?php foreach ($type as $message): ?>
-							<div class="label label-<?php echo $key; ?>"><?php echo $message; ?></div>
+							<div class="alert alert-<?php echo $key; ?>"><?php echo $message; ?></div>
 						<?php endforeach; ?>
 					<?php endforeach; ?>
 				<?php endif; ?>

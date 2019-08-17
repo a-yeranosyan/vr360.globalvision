@@ -42,32 +42,6 @@ class Vr360ModelTours extends Vr360Model
 
 		return $tours;
 	}
-
-	/**
-	 * @return array|boolean
-	 */
-	public function getPagination()
-	{
-		$limit = 20;
-
-		$db    = Vr360Factory::getDbo();
-		$query = $this->buildQuery();
-
-		$rows = $db->setQuery($query)->loadObjectList();
-
-		$input = Vr360Factory::getInput();
-
-		if (!empty($rows))
-		{
-			return array(
-				'current' => $input->getInt('page', 0),
-				'total'   => round(count($rows) / $limit) - 1
-			);
-		}
-
-		return false;
-	}
-
 	/**
 	 * @return \Joomla\Database\DatabaseQuery
 	 */
@@ -97,5 +71,30 @@ class Vr360ModelTours extends Vr360Model
 		}
 
 		return $query;
+	}
+
+	/**
+	 * @return array|boolean
+	 */
+	public function getPagination()
+	{
+		$limit = 20;
+
+		$db    = Vr360Factory::getDbo();
+		$query = $this->buildQuery();
+
+		$rows = $db->setQuery($query)->loadObjectList();
+
+		$input = Vr360Factory::getInput();
+
+		if (!empty($rows))
+		{
+			return array(
+				'current' => $input->getInt('page', 0),
+				'total'   => round(count($rows) / $limit) - 1
+			);
+		}
+
+		return false;
 	}
 }

@@ -98,7 +98,8 @@ $user = Vr360Factory::getUser();
 							<div class="form-group">
 								<label class="col-md-4 control-label" for="save"></label>
 								<div class="col-md-8">
-									<button id="user-save-profile" name="saveprofile" class="btn btn-primary btn-sm">Save
+									<button id="user-save-profile" name="saveprofile" class="btn btn-primary btn-sm">
+										<i class="fa fa-window-restore" aria-hidden="true"></i> <?php echo \Joomla\Language\Text::_('GENERAL_LABEL_SAVE'); ?>
 									</button>
 								</div>
 							</div>

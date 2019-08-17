@@ -76,8 +76,8 @@ class Vr360HelperFile
 	/**
 	 * Function to strip additional / or \ in a path name.
 	 *
-	 * @param   string  $path  The path to clean.
-	 * @param   string  $ds    Directory separator (optional).
+	 * @param   string $path The path to clean.
+	 * @param   string $ds   Directory separator (optional).
 	 *
 	 * @return  string  The cleaned path.
 	 *

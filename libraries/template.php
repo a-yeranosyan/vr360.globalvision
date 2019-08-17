@@ -27,7 +27,7 @@ class Vr360Template
 	}
 
 	/**
-	 * @param   string  $templateName
+	 * @param   string $templateName
 	 *
 	 * @return  string
 	 */

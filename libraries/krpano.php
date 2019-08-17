@@ -32,8 +32,8 @@ class Vr360Krpano
 	/**
 	 * Vr360Krpano constructor.
 	 *
-	 * @param   string  $binPath    Binary path
-	 * @param   string  $license    License
+	 * @param   string $binPath Binary path
+	 * @param   string $license License
 	 */
 	public function __construct($binPath, $license)
 	{
@@ -42,7 +42,7 @@ class Vr360Krpano
 	}
 
 	/**
-	 * @param   array  $files   Files
+	 * @param   array $files Files
 	 *
 	 * @return  void
 	 */
@@ -57,7 +57,7 @@ class Vr360Krpano
 	}
 
 	/**
-	 * @param   string  $file   Configuration file path
+	 * @param   string $file Configuration file path
 	 *
 	 * @return  void
 	 */
@@ -67,7 +67,7 @@ class Vr360Krpano
 	}
 
 	/**
-	 * @param   string  $parameter  Parameter
+	 * @param   string $parameter Parameter
 	 *
 	 * @return  void
 	 */
@@ -77,7 +77,7 @@ class Vr360Krpano
 	}
 
 	/**
-	 * @param   string  $command  Command
+	 * @param   string $command Command
 	 *
 	 * @return  boolean|string
 	 */

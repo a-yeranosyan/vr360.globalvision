@@ -10,17 +10,16 @@ defined('_VR360_EXEC') or die;
 class Vr360ViewTour extends Vr360View
 {
 	/**
+	 * @var  Vr360Tour
+	 */
+	public $tour;
+	/**
 	 * @var string
 	 */
 	protected $name = 'tour';
 
 	/**
-	 * @var  Vr360Tour
-	 */
-	public $tour;
-
-	/**
-	 * @param   string  $layout  Default layout
+	 * @param   string $layout Default layout
 	 *
 	 * @return mixed|null|string|string[]
 	 */
@@ -30,7 +29,8 @@ class Vr360ViewTour extends Vr360View
 
 		if (!$this->tour)
 		{
-			echo 'Tour not found'; exit();
+			echo 'Tour not found';
+			exit();
 		}
 
 		if ($this->tour)

@@ -10,33 +10,6 @@ defined('_VR360_EXEC') or die;
 class Vr360ModelTour extends Vr360Model
 {
 	/**
-	 * @param null $id
-	 *
-	 * @return boolean|Vr360Tour
-	 */
-	public function getItem($id = null)
-	{
-		$id = Vr360Factory::getInput()->getInt('id', $id);
-
-		if ($id)
-		{
-			$table = new Vr360TableTour;
-
-			if (!$table->load(array('id' => $id, 'created_by' => Vr360Factory::getUser()->id)))
-			{
-				return false;
-			}
-
-			$tour = new Vr360Tour;
-			$tour->bind($table);
-
-			return $tour;
-		}
-
-		return false;
-	}
-
-	/**
 	 * @param null $alias
 	 *
 	 * @return boolean|Vr360Tour
@@ -64,22 +37,11 @@ class Vr360ModelTour extends Vr360Model
 	}
 
 	/**
-	 * @param     $tourId
-	 * @param int $publish
-	 *
-	 * @return boolean|array
-	 */
-	public function getScenes($tourId, $publish = 1)
-	{
-		return Vr360ModelScenes::getInstance()->getList($tourId, $publish);
-	}
-
-	/**
 	 * @return  void
 	 */
 	public function ajaxSave()
 	{
-		$ajax = Vr360AjaxResponse::getInstance();
+		$ajax  = Vr360AjaxResponse::getInstance();
 		$input = Vr360Factory::getInput();
 
 		/**
@@ -128,12 +90,12 @@ class Vr360ModelTour extends Vr360Model
 		if ($input->getInt('id'))
 		{
 			// Save scene
-			$ajax->addInfo('Tour is updated')->success();
+			$ajax->addInfo(\Joomla\Language\Text::_('TOUR_NOTICE_TOUR_IS_UPDATED'))->success();
 		}
 		else
 		{
 			// Save scene
-			$ajax->addInfo('Tour is created')->success();
+			$ajax->addInfo(\Joomla\Language\Text::_('TOUR_NOTICE_TOUR_IS_CREATED'))->success();
 		}
 
 		// Make sure tour data folder exist.
@@ -189,78 +151,51 @@ class Vr360ModelTour extends Vr360Model
 
 		if (!$scenes)
 		{
-			$ajax->addWarning('No scenes provided');
+			$ajax->addWarning(\Joomla\Language\Text::_('TOUR_NOTICE_NO_SCENES_PROVIDED'))->fail();
+		}
+
+		if ($ajax->isSuccess())
+		{
+			if ($input->getInt('id'))
+			{
+				Vr360Session::getInstance()->addMessage(\Joomla\Language\Text::sprintf('TOUR_NOTICE_TOUR_IS_UPDATED', $tour->get('id')), 'success');
+			}
+			else
+			{
+				Vr360Session::getInstance()->addMessage(\Joomla\Language\Text::sprintf('TOUR_NOTICE_TOUR_IS_CREATED', $tour->get('id')), 'success');
+			}
+
+			Vr360Session::getInstance()->addMessage(\Joomla\Language\Text::_('TOUR_NOTICE_SCENES_UPDATED'), 'info');
 		}
 
 		$ajax->respond();
 	}
 
 	/**
-	 * Method for store new scenes
+	 * @param null $id
 	 *
-	 * @param   Vr360Tour $tour  Tour data
-	 * @param   array     $files List of new scenes files.
-	 *
-	 * @return  array|false        Array of new scenes files if success. False otherwise.
-	 *
-	 * @since   2.1.0
+	 * @return boolean|Vr360Tour
 	 */
-	protected function saveNewScenes($tour, $files)
+	public function getItem($id = null)
 	{
-		$input       = Vr360Factory::getInput();
-		$ajax        = Vr360AjaxResponse::getInstance();
-		$tourDataDir = VR360_PATH_DATA . '/' . $tour->id;
+		$id = Vr360Factory::getInput()->getInt('id', $id);
 
-		// Just check if user upload new files.
-		if (empty($files))
+		if ($id)
 		{
-			return false;
-		}
+			$table = new Vr360TableTour;
 
-		$uploadedFiles = array();
-
-		try
-		{
-			// Okay now we can process
-			$sceneNames        = $input->get('newSceneName', array(), 'Array');
-			$sceneDescriptions = $input->get('newSceneDescription', array(), 'Array');
-			$sceneParams       = $input->get('sceneParams', array(), 'Array');
-
-			foreach ($files as $index => $file)
+			if (!$table->load(array('id' => $id, 'created_by' => Vr360Factory::getUser()->id)))
 			{
-				$fileName = Vr360HelperTour::generateFilename($file['name']);
-
-				if (!move_uploaded_file($file['tmp_name'], $tourDataDir . '/' . $fileName))
-				{
-					continue;
-				}
-
-				$uploadedFiles[] = $tourDataDir . '/' . $fileName;
-
-				$scene = new Vr360Scene;
-
-				$scene->set('tourId', (int) $tour->id);
-				$scene->set('name', $sceneNames[$index]);
-				$scene->set('description', $sceneDescriptions[$index]);
-				$scene->set('file', $fileName);
-				$scene->set('params', $sceneParams);
-
-				if (!$scene->store())
-				{
-					$ajax->addDanger('Can not save scene: ' . $sceneNames[$index]);
-				}
-				else
-				{
-					$ajax->addSuccess('Added new scene: ' . $sceneNames[$index] . ' successed');
-				}
+				return false;
 			}
-		}
-		catch (Exception $exception)
-		{
-			$ajax->addDanger($exception->getMessage())->fail()->respond();
+
+			$tour = new Vr360Tour;
+			$tour->bind($table);
+
+			return $tour;
 		}
 
-		return empty($uploadedFiles) ? false : $uploadedFiles;
+		return false;
 	}
 
 	/**
@@ -347,6 +282,110 @@ class Vr360ModelTour extends Vr360Model
 	}
 
 	/**
+	 * @param   integer $tourId Tour ID
+	 *
+	 * @return  boolean
+	 */
+	public function resetDefaultScene($tourId)
+	{
+		$db    = Vr360Factory::getDbo();
+		$query = $db->getQuery(true)
+			->update($db->quoteName('scenes'))
+			->set($db->quoteName('default') . ' = 0')
+			->where($db->quoteName('tourId') . ' = ' . (int) $tourId);
+
+		try
+		{
+			$db->setQuery($query)->execute();
+		}
+		catch (Exception $exception)
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * @param     $tourId
+	 * @param int $publish
+	 *
+	 * @return boolean|array
+	 */
+	public function getScenes($tourId, $publish = 1)
+	{
+		return Vr360ModelScenes::getInstance()->getList($tourId, $publish);
+	}
+
+	/**
+	 * Method for store new scenes
+	 *
+	 * @param   Vr360Tour $tour  Tour data
+	 * @param   array     $files List of new scenes files.
+	 *
+	 * @return  array|false        Array of new scenes files if success. False otherwise.
+	 *
+	 * @since   2.1.0
+	 */
+	protected function saveNewScenes($tour, $files)
+	{
+		$input       = Vr360Factory::getInput();
+		$ajax        = Vr360AjaxResponse::getInstance();
+		$tourDataDir = VR360_PATH_DATA . '/' . $tour->id;
+
+		// Just check if user upload new files.
+		if (empty($files))
+		{
+			return false;
+		}
+
+		$uploadedFiles = array();
+
+		try
+		{
+			// Okay now we can process
+			$sceneNames        = $input->get('newSceneName', array(), 'Array');
+			$sceneDescriptions = $input->get('newSceneDescription', array(), 'Array');
+			$sceneParams       = $input->get('sceneParams', array(), 'Array');
+
+			foreach ($files as $index => $file)
+			{
+				$fileName = Vr360HelperTour::generateFilename($file['name']);
+
+				if (!move_uploaded_file($file['tmp_name'], $tourDataDir . '/' . $fileName))
+				{
+					continue;
+				}
+
+				$uploadedFiles[] = $tourDataDir . '/' . $fileName;
+
+				$scene = new Vr360Scene;
+
+				$scene->set('tourId', (int) $tour->id);
+				$scene->set('name', $sceneNames[$index]);
+				$scene->set('description', $sceneDescriptions[$index]);
+				$scene->set('file', $fileName);
+				$scene->set('params', $sceneParams);
+
+				if (!$scene->store())
+				{
+					$ajax->addDanger('Can not save scene: ' . $sceneNames[$index]);
+				}
+				else
+				{
+					$ajax->addSuccess('Added new scene: ' . $sceneNames[$index] . ' successed');
+				}
+			}
+		}
+		catch (Exception $exception)
+		{
+			$ajax->addDanger($exception->getMessage())->fail()->respond();
+		}
+
+		return empty($uploadedFiles) ? false : $uploadedFiles;
+	}
+
+	/**
 	 * Method for modify XML file with new data.
 	 *
 	 * @param   Vr360Tour         $tour Tour data
@@ -409,9 +448,9 @@ class Vr360ModelTour extends Vr360Model
 		$xmlData = Vr360Layout::getInstance()->fetch('tour.tour', array('tour' => $tour, 'scenes' => $scenes));
 		$xmlData = simplexml_load_string($xmlData);
 
-		$dom = new DOMDocument('1.0');
+		$dom                     = new DOMDocument('1.0');
 		$dom->preserveWhiteSpace = false;
-		$dom->formatOutput = true;
+		$dom->formatOutput       = true;
 		$dom->loadXML($xmlData->asXML());
 		$xml = new SimpleXMLElement($dom->saveXML());
 
@@ -427,7 +466,7 @@ class Vr360ModelTour extends Vr360Model
 		$alias = $input->getString('alias');
 		$id    = $input->getInt('id');
 
-		$db = Vr360Factory::getDbo();
+		$db    = Vr360Factory::getDbo();
 		$query = $db->getQuery(true)
 			->select($db->quoteName('id'))
 			->from($db->quoteName('tours'))
@@ -435,30 +474,5 @@ class Vr360ModelTour extends Vr360Model
 			->where($db->quoteName('id') . ' != ' . (int) $id);
 
 		return $db->setQuery($query)->loadResult();
-	}
-
-	/**
-	 * @param   integer  $tourId  Tour ID
-	 *
-	 * @return  boolean
-	 */
-	public function resetDefaultScene($tourId)
-	{
-		$db    = Vr360Factory::getDbo();
-		$query = $db->getQuery(true)
-			->update($db->quoteName('scenes'))
-			->set($db->quoteName('default') . ' = 0')
-			->where($db->quoteName('tourId') . ' = ' . (int) $tourId);
-
-		try
-		{
-			$db->setQuery($query)->execute();
-		}
-		catch (Exception $exception)
-		{
-			return false;
-		}
-
-		return true;
 	}
 }

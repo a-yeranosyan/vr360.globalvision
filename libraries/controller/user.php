@@ -23,7 +23,7 @@ class Vr360ControllerUser extends Vr360Controller
 		}
 		else
 		{
-			Vr360Session::getInstance()->addMessage('Invalid Username or password', 'warning');
+			Vr360Session::getInstance()->addMessage(\Joomla\Language\Text::_('USER_NOTICE_INVALID_USERNAME_OR_PASSWORD'), 'warning');
 			$input->set('view', 'user');
 			$this->display();
 		}
@@ -48,6 +48,14 @@ class Vr360ControllerUser extends Vr360Controller
 	 */
 	public function ajaxGetUserHtml()
 	{
+		$ajax = Vr360AjaxResponse::getInstance();
+
+		// Permission verify
+		if (!Vr360HelperAuthorize::isAuthorized())
+		{
+			$ajax->addWarning(\Joomla\Language\Text::_('USER_NOTICE_USER_IS_NOT_AUTHORIZED'))->fail()->respond();
+		}
+
 		$html = Vr360Layout::getInstance()->fetch('user.profile');
 
 		Vr360AjaxResponse::getInstance()->addData('html', $html)->success()->respond();
@@ -58,6 +66,14 @@ class Vr360ControllerUser extends Vr360Controller
 	 */
 	public function ajaxSaveProfile()
 	{
+		$ajax = Vr360AjaxResponse::getInstance();
+
+		// Permission verify
+		if (!Vr360HelperAuthorize::isAuthorized())
+		{
+			$ajax->addWarning(\Joomla\Language\Text::_('USER_NOTICE_USER_IS_NOT_AUTHORIZED'))->fail()->respond();
+		}
+
 		Vr360ModelUser::getInstance()->ajaxSaveProfile();
 	}
 }

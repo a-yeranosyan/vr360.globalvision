@@ -1,4 +1,4 @@
-	<?php
+<?php
 
 defined('_VR360_EXEC') or die;
 
@@ -35,8 +35,8 @@ class Vr360Scene extends Vr360TableScene
 			return false;
 		}
 
-		$pathInfo = pathinfo($this->file);
-		$path = VR360_PATH_DATA . '/' . $this->tourId . '/' . $this->file;
+		$pathInfo  = pathinfo($this->file);
+		$path      = VR360_PATH_DATA . '/' . $this->tourId . '/' . $this->file;
 		$scenePath = VR360_PATH_DATA . '/' . $this->tourId . '/vtour/panos/' . $pathInfo['filename'];
 
 		// Finally delete physical file
@@ -70,13 +70,13 @@ class Vr360Scene extends Vr360TableScene
 		return Vr360ModelHotspots::getInstance()->getList($this->get('id'));
 	}
 
-	public function getFile()
-	{
-		return VR360_PATH_DATA . '/' . $this->tourId . '/' . $this->file;
-	}
-
 	public function isValid()
 	{
 		return Vr360HelperFile::exists($this->getFile());
+	}
+
+	public function getFile()
+	{
+		return VR360_PATH_DATA . '/' . $this->tourId . '/' . $this->file;
 	}
 }

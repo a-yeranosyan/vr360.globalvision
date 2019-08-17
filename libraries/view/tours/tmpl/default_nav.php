@@ -23,7 +23,7 @@
 							<!-- Provides extra visual weight and identifies the primary action in a set of buttons -->
 							<button type="button" class="btn btn-primary tour-add" id="tour-add">
 								<i class="fas fa-plus"></i>
-								Add new
+								<?php echo \Joomla\Language\Text::_('TOURS_LABEL_ADD_NEW'); ?>
 							</button>
 						</li>
 					</ul>
@@ -54,7 +54,7 @@
 											id="search-keyword"
 											data-action="filter"
 											data-filters="#task-table"
-											placeholder="Enter keyword for searching"
+											placeholder="<?php echo \Joomla\Language\Text::_('TOURS_DESCRIPTION_KEYWORD'); ?>"
 											name="keyword"
 											value="<?php echo Vr360Factory::getInput()->get('keyword'); ?>"
 									/>
@@ -83,7 +83,7 @@
 									id="user-logout"
 									class="btn btn-danger">
 								<i class="fas fa-sign-out-alt"></i>
-								Logout
+								<?php echo \Joomla\Language\Text::_('USER_LABEL_USER_LOGOUT'); ?>
 							</button>
 						</form>
 					</li>

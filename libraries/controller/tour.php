@@ -17,7 +17,7 @@ class Vr360ControllerTour extends Vr360Controller
 		// Permission verify
 		if (!Vr360HelperAuthorize::isAuthorized())
 		{
-			$ajax->addWarning('User is not authorized')->fail()->respond();
+			$ajax->addWarning(\Joomla\Language\Text::_('USER_NOTICE_USER_IS_NOT_AUTHORIZED'))->fail()->respond();
 		}
 
 		Vr360ModelTour::getInstance()->ajaxSave();
@@ -32,6 +32,14 @@ class Vr360ControllerTour extends Vr360Controller
 	 */
 	public function ajaxGetTourHtml()
 	{
+		$ajax = Vr360AjaxResponse::getInstance();
+
+		// Permission verify
+		if (!Vr360HelperAuthorize::isAuthorized())
+		{
+			$ajax->addWarning(\Joomla\Language\Text::_('USER_NOTICE_USER_IS_NOT_AUTHORIZED'))->fail()->respond();
+		}
+
 		$tour = Vr360ModelTour::getInstance()->getItem();
 
 		if ($tour)
@@ -51,6 +59,14 @@ class Vr360ControllerTour extends Vr360Controller
 	 */
 	public function ajaxGetTourEmbedHtml()
 	{
+		$ajax = Vr360AjaxResponse::getInstance();
+
+		// Permission verify
+		if (!Vr360HelperAuthorize::isAuthorized())
+		{
+			$ajax->addWarning(\Joomla\Language\Text::_('USER_NOTICE_USER_IS_NOT_AUTHORIZED'))->fail()->respond();
+		}
+
 		$tour = Vr360ModelTour::getInstance()->getItem();
 
 		if ($tour)
@@ -65,105 +81,55 @@ class Vr360ControllerTour extends Vr360Controller
 	 */
 	public function ajaxDeleteTour()
 	{
-		$ajax  = Vr360AjaxResponse::getInstance();
-		$input = Vr360Factory::getInput();
+		$ajax = Vr360AjaxResponse::getInstance();
 
-		$tour = Vr360ModelTour::getInstance()->getItem();
+		// Permission verify
+		if (!Vr360HelperAuthorize::isAuthorized())
+		{
+			$ajax->addWarning(\Joomla\Language\Text::_('USER_NOTICE_USER_IS_NOT_AUTHORIZED'))->fail()->respond();
+		}
+
+		$input = Vr360Factory::getInput();
+		$tour  = Vr360ModelTour::getInstance()->getItem();
 
 		if (!$tour)
 		{
-			$ajax->addDanger('Tour is not available.')->fail()->respond();
+			$ajax->addWarning(\Joomla\Language\Text::_('TOUR_NOTICE_TOUR_IS_NOT_AVAILABLE'))->fail()->respond();
 		}
 
 		if (!$tour->delete())
 		{
-			$ajax->addDanger('Delete tour: ' . (int) $input->getInt('id') . ' fail')->fail()->respond();
+			$ajax->addDanger(\Joomla\Language\Text::sprintf('GENERAL_NOTICE_DELETED_FAIL', $input->getInt('id')))->fail()->respond();
 		}
 
-		$ajax->addSuccess('Delete tour: ' . (int) $input->getInt('id') . ' success')->success()->respond();
+		Vr360Session::getInstance()->addMessage(\Joomla\Language\Text::sprintf('GENERAL_NOTICE_DELETED_SUCCESS', $input->getInt('id')),'success');
+		$ajax->success()->respond();
 	}
 
+	/**
+	 * @return  void
+	 */
 	public function ajaxGetHotspotEditorHtml()
 	{
-		$input = Vr360Factory::getInput();
+		$ajax = Vr360AjaxResponse::getInstance();
 
-		$tour = new Vr360Tour;
-		$tour->load(
-			array
-			(
-				'id'         => (int) $input->getInt('id'),
-				'created_by' => Vr360Factory::getUser()->id
-			)
-		);
+		// Permission verify
+		if (!Vr360HelperAuthorize::isAuthorized())
+		{
+			$ajax->addWarning(\Joomla\Language\Text::_('USER_NOTICE_USER_IS_NOT_AUTHORIZED'))->fail()->respond();
+		}
 
-		$ajaxResponse = Vr360AjaxResponse::getInstance();
+		$tour = Vr360ModelTour::getInstance()->getItem();
 
 		if ($tour === false)
 		{
-			$ajaxResponse->addData('html', 'Tour not found.')->fail()->respond();
+			$ajax->addData('html', \Joomla\Language\Text::_('TOUR_NOTICE_TOUR_IS_NOT_AVAILABLE'))->fail()->respond();
 		}
 		else
 		{
 			$html = Vr360Layout::getInstance()->fetch('form.hotspots', array('tour' => $tour));
-
-			$ajaxResponse->addData('html', $html)->success()->respond();
+			$ajax->addData('html', $html)->success()->respond();
 		}
-	}
-
-	/**
-	 *
-	 */
-	public function ajaxSaveHotspot()
-	{
-		$ajax  = Vr360AjaxResponse::getInstance();
-		$input = Vr360Factory::getInput();
-
-		$tour = new Vr360Tour;
-		$tour->load(
-			array
-			(
-				'id'         => (int) $input->getInt('id'),
-				'created_by' => Vr360Factory::getUser()->id
-			)
-		);
-
-		if ($tour)
-		{
-			// Get current json data
-			$jsonData = $tour->getJsonData();
-
-			$hotspotsList     = json_decode($input->getString('hotspotList'), true);
-			$defaultViewsList = json_decode($input->getString('defaultViewList'), true);
-
-			if ($hotspotsList === null || $defaultViewsList === null)
-			{
-				$ajax->addWarning('Invalid data')->fail()->respond();
-			}
-
-			// Apply data
-			foreach ($hotspotsList as $scene => $hotspots)
-			{
-				$jsonData['hotspotList'][$scene] = $hotspots;
-			}
-
-			// Apply data
-			foreach ($defaultViewsList as $scene => $defaultView)
-			{
-				$jsonData['defaultViewList'][$scene] = $defaultView;
-			}
-
-			// Create xml for tour
-			if (Vr360HelperTour::generateXml($tour->dir, $jsonData) === false)
-			{
-				$ajax->addWarning('Can not generate xml for vTour')->fail()->respond();
-			}
-
-			// Write back to data.json
-			$jsonFile = $tour->getFile('data.json');
-			Vr360HelperFile::write($jsonFile, json_encode($jsonData));
-		}
-
-		$ajax->success()->respond();
 	}
 
 	/**
@@ -179,7 +145,7 @@ class Vr360ControllerTour extends Vr360Controller
 
 		if ($result)
 		{
-			$ajax->addDanger('Duplicated alias. Please use another tour name or manual change alias')->fail()->respond();
+			$ajax->addDanger(\Joomla\Language\Text::_('TOUR_NOTICE_DUPLICATED_ALIAS'))->fail()->respond();
 		}
 
 		$ajax->success()->respond();

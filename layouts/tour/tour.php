@@ -47,7 +47,7 @@ $includes     = Vr360HelperKrpano::getIncludes();
 	               maps_google_api_key=""
 	               maps_zoombuttons="false"
 	               gyro="true"
-	               webvr="true"
+	               webvr="<?php echo $tour->params->get('vr_mode', false) ?>"
 	               webvr_gyro_keeplookingdirection="false"
 	               webvr_prev_next_hotspots="true"
 	               littleplanetintro="false"
@@ -93,7 +93,15 @@ $includes     = Vr360HelperKrpano::getIncludes();
 	/>
 
 	<!-- Use for override everything -->
+	<!-- Skin override only -->
 	<include url="<?php echo $assetsPath; ?>/vendor/krpano/skins/<?php echo $skin; ?>"/>
+
+	<?php if ($tour->params->get('userlogo') && $tour->getUser()->haveLogo()): ?>
+		<layer name="user_logo" type="container" keep="true" x="16" y="60">
+			<layer name="logo" type="image" url="<?php echo $tour->getUser()->getLogoUrl(); ?>"
+			       keep="true" lefttop="center" width="50" height="50"/>
+		</layer>
+	<?php endif; ?>
 
 	<action name="startup" autorun="onstart">
 		if(startscene === null OR !scene[get(startscene)], copy(startscene,scene[<?php echo $defaultScene ?>].name); );

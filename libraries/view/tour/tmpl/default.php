@@ -26,7 +26,7 @@
 	<!-- Krpano -->
 	<script src="<?php echo $tour->getKrpanoJsUrl(); ?>"></script>
 
-	<script src="./assets/js/site/tour.js"></script>
+	<script src="./assets/js/site/tour.min.js"></script>
 
 	<!-- SEO Metadata -->
 	<meta name="robots" content="index, follow"/>
@@ -35,7 +35,7 @@
 </head>
 <body>
 <?php if (!$this->tour->isValid() || !$this->tour->isValidForRender()): ?>
-	<span class="label label-danger">Invalid tour or data broken</span>
+	<span class="label label-danger"><?php echo \Joomla\Language\Text::_('GENERAL_LABEL_INVALID_TOUR'); ?>Invalid tour or data broken</span>
 <?php else: ?>
 	<div id="pano" style="">
 		<noscript>
@@ -48,8 +48,7 @@
 			</table>
 		</noscript>
 		<script type="text/javascript">
-			window.onload = function()
-			{
+			window.onload = function () {
 				<?php echo $tour->getKrpanoEmbedPano(); ?>
 			}
 		</script>

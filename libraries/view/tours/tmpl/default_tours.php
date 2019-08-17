@@ -4,7 +4,7 @@
 		<div class="panel-heading">
 			<h3 class="panel-title">
 				<i class="fas fa-th-list"></i>
-				vTours <?php echo ($this->tours) ? '' : '<span class="label label-info">Use "Add new" to create new vTour</span>'; ?>
+				<?php echo \Joomla\Language\Text::_('TOURS_LABEL_VTOURS'); ?> <?php echo ($this->tours) ? '' : '<span class="label label-info">' . \Joomla\Language\Text::_('TOURS_DESCRIPTION_PANEL') . '</span>'; ?>
 			</h3>
 		</div>
 		<div class="panel-body">
@@ -19,22 +19,24 @@
 						<tr>
 							<th>#</th>
 							<th>
-								<input id="tours-check-all" type="checkbox" class="tours-check-all" />
+								<input id="tours-check-all" type="checkbox" class="tours-check-all"/>
 							</th>
 							<th>
-								<i class="fa fa-window-maximize" aria-hidden="true"></i> Name
+								<i class="fa fa-window-maximize"
+								   aria-hidden="true"></i> <?php echo \Joomla\Language\Text::_('GENERAL_LABEL_NAME'); ?>
 							</th>
 							<th>
-								<i class="far fa-calendar-alt"></i> Created
+								<i class="far fa-calendar-alt"></i> <?php echo \Joomla\Language\Text::_('GENERAL_LABEL_CREATED'); ?>
 							</th>
 							<th>
-								<i class="fas fa-eye"></i> Scenes
+								<i class="fas fa-eye"></i> <?php echo \Joomla\Language\Text::_('GENERAL_LABEL_SCENES'); ?>
 							</th>
 							<th>
-								<i class="fas fa-street-view"></i> Hotspots
+								<i class="fas fa-street-view"></i> <?php echo \Joomla\Language\Text::_('GENERAL_LABEL_HOTSPOTS'); ?>
 							</th>
 							<th>
-								<i class="fa fa-cogs" aria-hidden="true"></i> Controls
+								<i class="fa fa-cogs"
+								   aria-hidden="true"></i> <?php echo \Joomla\Language\Text::_('GENERAL_LABEL_CONTROLS'); ?>
 							</th>
 						</tr>
 						</thead>
@@ -68,7 +70,9 @@
 									<span class="tour-name"><?php echo $tour->getName(); ?></span>
 									<!-- Split button -->
 									<div class="btn-group pull-right tour-links">
-										<button type="button" class="btn btn-info">Links</button>
+										<button type="button" class="btn btn-info"><i
+													class="fas fa-link"></i> <?php echo \Joomla\Language\Text::_('TOURS_LABEL_LINKS'); ?>
+										</button>
 										<button
 												type="button"
 												class="btn btn-info dropdown-toggle"
@@ -93,7 +97,8 @@
 									</div>
 									<div>
 										<small>
-											<span class="label label-default" class="tour-alias"><?php echo $tour->alias; ?></span>
+											<span class="label label-default"
+											      class="tour-alias"><?php echo $tour->alias; ?></span>
 										</small>
 									</div>
 								</td>
@@ -104,7 +109,8 @@
 												type="button"
 												class="btn btn-primary tour-edit"
 												data-tour-id="<?php echo $tour->id ?>">
-											Edit <span class="badge"><?php echo count($tour->getScenes()); ?></span>
+											<?php echo \Joomla\Language\Text::_('TOURS_LABEL_EDIT'); ?> <span
+													class="badge"><?php echo count($tour->getScenes()); ?></span>
 										</button>
 									<?php endif; ?>
 								</td>
@@ -116,7 +122,8 @@
 												class="btn btn-primary tour-edit-hotspots"
 												data-tour-id="<?php echo $tour->id ?>"
 										>
-											Edit <span class="badge"><?php echo $tour->getHotspots(); ?></span>
+											<?php echo \Joomla\Language\Text::_('TOURS_LABEL_EDIT'); ?> <span
+													class="badge"><?php echo $tour->getHotspots(); ?></span>
 										</button>
 									<?php endif; ?>
 								</td>
@@ -128,21 +135,22 @@
 												class="btn btn-default tour-embed"
 												data-tour-id="<?php echo $tour->id ?>"
 										>
-											<i class="fa fa-code" aria-hidden="true"></i> Embed
+											<i class="fa fa-code"
+											   aria-hidden="true"></i> <?php echo \Joomla\Language\Text::_('TOURS_LABEL_EMBED'); ?>
 										</button>
 									<?php endif; ?>
 									<?php if ($tour->canPreview()): ?>
 										<!-- Preview -->
 										<a type="button" class="btn btn-info tour-preview" target="_blank"
 										   href="/<?php echo $tour->alias ?>">
-											<i class="fas fa-desktop"></i> Preview
+											<i class="fas fa-desktop"></i> <?php echo \Joomla\Language\Text::_('TOURS_LABEL_PREVIEW'); ?>
 										</a>
 									<?php endif; ?>
 									<button
 											type="button"
 											class="btn btn-danger tour-delete"
 											data-tour-id="<?php echo $tour->id ?>">
-										<i class="fas fa-minus"></i> Delete
+										<i class="fas fa-minus"></i> <?php echo \Joomla\Language\Text::_('TOURS_LABEL_DELETE'); ?>
 									</button>
 								</td>
 							</tr>
@@ -168,7 +176,8 @@
 				<?php endif; ?>
 			<?php else: ?>
 				<div class="col-md-12">
-					<div class="alert alert-warning" role="alert">There are no vTours</div>
+					<div class="alert alert-warning"
+					     role="alert"><?php echo \Joomla\Language\Text::_('TOURS_LABEL_NO_TOURS'); ?></div>
 				</div>
 			<?php endif; ?>
 		</div>

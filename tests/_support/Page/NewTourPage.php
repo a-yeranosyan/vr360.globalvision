@@ -8,51 +8,88 @@
 
 namespace Page;
 
-
+/**
+ * Class NewTourPage
+ *
+ * @uses    For most of input please use @name instead ID because it's constant
+ * @uses    To use class, make sure use unique class only not all class
+ *
+ * @package Page
+ */
 class NewTourPage
 {
+	/**
+	 * @var array
+	 */
+	public static $fieldName = ['id' => 'name'];
 
-    public static $fieldName  = ['xpath' => './/*[@id=\'name\']'];
+	/**
+	 * @var array
+	 */
+	public static $fieldFriendlyURL = ['id' => 'alias'];
 
-    public static $fieldFriendlyURL = ['xpath' => '//input[@id=\'alias\']'];
 
-    public static $checkAutoRation = ['xpath' => '//input[@id=\'tour_rotation\']'];
+	/**
+	 * @var array
+	 */
+	public static $checkAutoRation = ['id' => 'tour-param-rotation'];
 
-    public static $checkShowMedia = ['xpath' => '//input[@id=\'tour_social\']' ];
+	/**
+	 * @var array
+	 */
+	public static $checkShowMedia = ['id' => 'tour-param-socials'];
 
-    public static $fieldTitleFirst = ['xpath' => '(//div[@id=\'panoWrap\']/div[2]/input)[2]'];
-
-    public static $fieldDescriptionFirst = ['xpath' => '(//div[@id=\'panoWrap\']/div[3]/input)[2]'];
-
-    public static $btnAddImageFirst = ['xpath' => '(//div[@id=\'panoWrap\']/div[1]/input)[2]'];
-
-    public static $btnClose = ['id' => 'modal-close'];
-
-    public static $btnRemovePano = ['xpath' => '//div[@id=\'tour-panos\']/div/div[1]/button'];
-
-    public static $btnCreate = ['xpath' => './/*[@id=\'saveTour\']'];
-
-    public static $btnAddPano = ['xpath' => './/*[@id=\'addScene\']'];
     
-    
-    //image 
-    public static $imageFirst = '1.jpg';
-    
-    public function nameField($value)
-    {
-        $xpath = '(//input[@name=\'newSceneName[]\'])['.$value.']';
-        return $xpath;
-    }
+	/**
+	 * @uses    Only get xpath for required class NOT whole class
+	 * @uses    And this button must be inside parent "scenes"
+	 *
+	 * @var array
+	 */
+	public static $buttonRemoveScene = ['xpath' => '//button[contains(concat(\' \', @class, \' \'), \'tour-scene-remove\')]'];
 
-    public function descriptionField($value)
-    {
-        $xpath = '(//input[@name=\'newSceneDescription[]\'])['.$value.']';
-        return $xpath;
-    }
 
-    public function imageInput($value)
-    {
-        $xpath = '(//input[@name=\'newSceneFile[]\'])['.$value.']';
-       return $xpath;
-    }
+	/**
+	 * @var array
+	 */
+	public static $btnCreate = ['id' => 'tour-save'];
+
+	/**
+	 * @var array
+	 */
+	public static $btnAddPano = ['id' => 'tour-scene-add'];
+
+    /**
+     * @var array
+     */
+	public static $missingField = ['xpath' => '//span[contains(concat(\' \', @class, \' \'), \' form-error \')]'];
+
+	/**
+	 * @var string
+	 */
+	public static $messageMissingField = 'This is a required field';
+
+	//image
+	public static $imageFirst = '1.jpg';
+
+	public function nameField($value)
+	{
+		$xpath = '(//input[@name=\'newSceneName[]\'])[' . $value . ']';
+
+		return $xpath;
+	}
+
+	public function descriptionField($value)
+	{
+		$xpath = '(//input[@name=\'newSceneDescription[]\'])[' . $value . ']';
+
+		return $xpath;
+	}
+
+	public function imageInput($value)
+	{
+		$xpath = '(//input[@name=\'newSceneFile[]\'])[' . $value . ']';
+
+		return $xpath;
+	}
 }

@@ -29,7 +29,7 @@
 			name="user-login"
 			id="user-login"
 	>
-		<i class="fas fa-sign-in-alt"></i> Login
+		<i class="fas fa-sign-in-alt"></i> <?php echo \Joomla\Language\Text::_('USER_LABEL_USER_LOGIN'); ?>
 	</button>
 	<button
 			type="submit"
@@ -37,7 +37,7 @@
 			name="user-reset-password"
 			id="user-reset-password"
 	>
-		<i class="fas fa-exchange-alt"></i> Reset password
+		<i class="fas fa-exchange-alt"></i> <?php echo \Joomla\Language\Text::_('USER_LABEL_RESET_PASSWORD'); ?>
 	</button>
 	<fieldset>
 		<input type="hidden" name="view" value="user"/>

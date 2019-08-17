@@ -52,22 +52,8 @@ class Vr360Layout
 	}
 
 	/**
-	 * @param   string  $layout  Layout file
-	 * @param   array   $data    Data
-	 *
-	 * @return  void
-	 */
-	public function load($layout, $data = array())
-	{
-		$this->layout = $layout;
-
-		extract($data);
-		require $this->layoutBase . DIRECTORY_SEPARATOR . str_replace('.', DIRECTORY_SEPARATOR, $layout) . '.php';
-	}
-
-	/**
-	 * @param   string  $layout  Layout file
-	 * @param   array   $data    Data
+	 * @param   string $layout Layout file
+	 * @param   array  $data   Data
 	 *
 	 * @return  string
 	 */
@@ -80,5 +66,19 @@ class Vr360Layout
 		ob_end_clean();
 
 		return $html;
+	}
+
+	/**
+	 * @param   string $layout Layout file
+	 * @param   array  $data   Data
+	 *
+	 * @return  void
+	 */
+	public function load($layout, $data = array())
+	{
+		$this->layout = $layout;
+
+		extract($data);
+		require $this->layoutBase . DIRECTORY_SEPARATOR . str_replace('.', DIRECTORY_SEPARATOR, $layout) . '.php';
 	}
 }

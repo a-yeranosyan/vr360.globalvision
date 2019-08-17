@@ -71,3 +71,11 @@ h1[id] {
 .modal form label.control-label {
     text-align: left;
 }
+
+/**
+Modal
+ */
+.modal-dialog
+{
+    width: 95%;
+}

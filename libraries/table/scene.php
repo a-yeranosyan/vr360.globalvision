@@ -75,7 +75,7 @@ class Vr360TableScene extends Vr360Table
 
 		if ($this->ordering === null)
 		{
-			$db = Vr360Factory::getDbo();
+			$db    = Vr360Factory::getDbo();
 			$query = $db->getQuery(true)
 				->select(' MAX(' . $db->quoteName('ordering') . ')')
 				->from($db->quoteName('scenes'))
